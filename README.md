@@ -2,7 +2,7 @@
 
 Data and code for the following paper:
 
-> George Walkden, Gemma Hunter McCarley, Raquel Montero Estebaranz, Molly Rolf,
+> George Walkden, Gemma Hunter McCarley, Raquel Montero, Molly Rolf,
 Sarah Einhaus & Henri Kauhanen (2023) Sociolinguistic typology meets historical corpus linguistics.
 
 
