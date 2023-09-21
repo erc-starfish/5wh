@@ -1,0 +1,12 @@
+non_finite_verb:  *VB|V*N|*HV|H*N|*DO|D*N|*BE|BEN
+nonfinite_mainverb: *VB|VBN|VAG|*BE|BEN|BAG|*HV|HVN|*DO|D*N|
+finite_verb: *MD|*HVP|*HVD|*DOP|*DOD|*BEP|*BED|*VBP|*VBD|AXD|AXP|MDD|MDP
+finite_aux: *MD|*HVP|*HVD|*DOP|*DOD|*BEP|*BED|AXD|AXP|MDD|MDP
+finite_lexical: *VBP|*VBD
+object: NP-OB1|NP-OB2
+
+D-fem-nom: +teo|+Teo|+teo-the|+Teo-the|seo|Seo|seo-the|Seo-the|+deo|+Deo|+deo-the|+Deo-the|yeo|Yeo|yeo-the|Yeo-the|+diu|+Diu|+dio|+Dyo|sio|Sio
+D-mas-nom: +te|+Te|+te-the|+Te-the|te|Te|se|Se|se-the|Se-the|+de|+De|+de-the|+De-the|ye|Ye|ye-the|Ye-the|the|The
+D-neut-nom: +t+at|+T+at|+t+at-the|+T+at-the|+d+at|+D+at|+d+at-the|+D+at-the|y+at|Y+at|y+at-the|Y+at-the
+
+D-plural-nom: +ta|+Ta|+to|+To|+ta-the|+Ta-the|+to-the|+To-the|Ta|ta|to|To|+da|+Da|+da-the|+Da-the|ya|Ya|ya-the|Ya-the|tha|Tha
