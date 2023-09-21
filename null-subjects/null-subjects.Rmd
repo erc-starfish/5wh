@@ -48,17 +48,19 @@ orality <- subset(orality, docID != "CPMTpoSP")
 
 ```{r}
 #plot
+orality$Country <- ifelse(orality$country == "DR", "Dominican Republic", orality$country)
+orality$Country <- factor(orality$Country)
 orality_plot_regression <- ggplot(data = orality, aes(x = ORSCORE, y = OVERT_RATE)) + 
-  ylim(0, .3) +
-  xlim(0, 2.5) +
+  #ylim(0, .3) +
+  #xlim(0, 2.5) +
   geom_smooth(method = "lm", se = FALSE, color = "black") +
   labs(x="ORSCORE", y="Proportion of overt pronouns") + 
-	geom_point(size=3.0, aes(pch = country, color = country)) + 
+	geom_point(size=3.0, aes(pch = Country, color = Country)) + 
 	#ggtitle(paste0("Orality")) + 
 	theme_minimal() + scale_color_npg()
 
 # save to external file
-ggsave("orality.pdf", height=4, width=6)
+ggsave("orality.pdf", plot=orality_plot_regression, height=4, width=6)
 
 
 #model
@@ -78,13 +80,13 @@ pronoun_plot <- function(mydata, country, panelID, type="regular") {
   if (country == "Colombia") {
     data$docID <- factor(data$docID,levels = c("co16oyc", "co16evii", "co17vdm", "co17gnrg", "co18gsfb", "co18ppym", "co19ihdc", "co19syl", "CPMTpr", "CPMTpoOG", "CPMTpoSP", "CPMTpl"))
     docs <- c("1563\nOYC", "1589\nEVII", "1614\nVDM", "1674\nGNRG", "1787\nGSFB", "1792\nPPYM", "1844\nIHDC", "1882\nSYL", "1877\nPR", "1877\nPOog", "1877\nPOsp", "1880\nPL")
-  } else if (country == "DR") {
+  } else if (country == "Dominican Republic") {
     data$docID <- factor(data$docID,levels = c("dr16sdj", "dr16ent", "dr17dphj", "dr18asd", "dr18livie", "dr19ald", "dr19gal"))
     docs <- c("1500\nSDJ", "1588\nENT", "1658\nDPHJ", "1752\nASD", "1785\nLIVIE", "1857\nALD", "1886\nGAL")
   } else if (country == "Bolivia") {
     data$docID <- factor(data$docID,levels = c("bo16rvp", "bo18hvip", "bo19adla", "bo19jdlr", "bo21iia"))
     docs <- c("1550\nRVP", "1721\nHVIP", "1839\nADLA", "1885\nJDLR", "2010\nIIA")
-  } else if (country == "Panama") {
+  } else if (country == "Panamá") {
     data$docID <- factor(data$docID,levels = c("pa16hgni", "pa16car", "pa17lldp", "pa17dlyd", "pa19mpe", "pa19hs"))
     docs <- c("1535\nHGNI", "1546\nCAR", "1638\nLLDP", "1695\nDLYD", "1872\nMPE", "1875\nHS")
   } else if (country == "Spain") {
@@ -102,11 +104,7 @@ pronoun_plot <- function(mydata, country, panelID, type="regular") {
     guides(fill=guide_legend(title="Pronoun"), color=guide_legend(override.aes=list(fill=NA), title="Genre")) +
     theme_minimal() + theme(panel.grid.major=element_blank(), panel.grid.minor=element_blank())
 
-  if (country == "DR") {
-    barchart <- barchart + ggtitle(paste0("(", panelID, ") Dominican Republic"))
-  } else {
-    barchart <- barchart + ggtitle(paste0("(", panelID, ") ", country))
-  }
+  barchart <- barchart + ggtitle(paste0("(", panelID, ") ", country, " (n = ", nrow(data), ")"))
 
   if (type == "supp") {
     #barchart <- barchart + scale_fill_manual(values = c("NULL" = "#7294D4", "OVERT" = "#C6CDF7")) + scale_color_manual(values = c("DOC" = "black", "LIT" = "white", "SUPP" = "gold")) + theme(axis.text.x = element_text(size = 9, color = "black"))
@@ -120,18 +118,21 @@ pronoun_plot <- function(mydata, country, panelID, type="regular") {
   barchart
 }
 
+mydata$Country <- ifelse(mydata$Country == "DR", "Dominican Republic", mydata$Country)
+mydata$Country <- factor(mydata$Country)
+
 pp1 <- pronoun_plot(mydata, country="Colombia", type="supp", panelID="a")
-pp2 <- pronoun_plot(mydata, country="DR", type="supp", panelID="b")
-pp3 <- pronoun_plot(mydata, country="Bolivia", type="supp", panelID="c")
-#pp4 <- pronoun_plot(mydata, country="Panama", type="supp", panelID="d")
+pp2 <- pronoun_plot(mydata, country="Bolivia", type="supp", panelID="b")
+pp3 <- pronoun_plot(mydata, country="Dominican Republic", type="supp", panelID="c")
+pp4 <- pronoun_plot(mydata, country="Panamá", type="supp", panelID="d")
 pp5 <- pronoun_plot(mydata, country="Spain", type="supp", panelID="e")
 
 # combined plot
-combined_plot <- grid.arrange(pp2, pp3, pp5, pp5, nrow=2, ncol=2)
+combined_plot <- grid.arrange(pp2, pp3, pp4, pp5, nrow=2, ncol=2)
 combined_plot <- grid.arrange(pp1, combined_plot, nrow=2, ncol=1, heights=c(1.1,2))
 
 # save to external file
-ggsave("pronoun_combined.pdf", plot=combined_plot, height=10, width=9)
+ggsave("pronoun-combined.pdf", plot=combined_plot, height=10, width=9)
 ```
 
 ## Main model
