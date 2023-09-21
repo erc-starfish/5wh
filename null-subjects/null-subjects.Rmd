@@ -166,5 +166,6 @@ Anova(binary_null_mdl_int, type = "III")
 AIC(binary_null_mdl_int)
 
 #checking residuals
+res_orality <- simulateResiduals(xmdl, plot = T)
 res <- simulateResiduals(binary_null_mdl_int, plot = T)
 ```
