@@ -108,10 +108,10 @@ pronoun_plot <- function(mydata, country, panelID, type="regular") {
 
   if (type == "supp") {
     #barchart <- barchart + scale_fill_manual(values = c("NULL" = "#7294D4", "OVERT" = "#C6CDF7")) + scale_color_manual(values = c("DOC" = "black", "LIT" = "white", "SUPP" = "gold")) + theme(axis.text.x = element_text(size = 9, color = "black"))
-    barchart <- barchart + scale_fill_manual(values = c("OVERT" = "#3d62a6", "NULL" = "#dfe2f7")) + scale_color_manual(values = c("DOC" = "black", "LIT" = "black", "SUPP" = "black")) + theme(axis.text.x = element_text(size = 9, color = "black"))
+    barchart <- barchart + scale_fill_manual(values = c("OVERT" = "#3d62a6", "NULL" = "#dfe2f7")) + scale_color_manual(values = c("DOC" = "black", "LIT" = "black", "SUPP" = "black")) + theme(axis.text.x = element_text(size = 10, color = "black"), axis.text.y=element_text(color="black"))
     #supp genre ^^^
   } else if (type == "regular") {
-    barchart <- barchart + scale_fill_manual(values = c("NULL" = "#7294D4", "OVERT" = "#C6CDF7")) + scale_color_manual(values = c("DOC" = "black", "LIT" = "white")) + theme(axis.text.x = element_text(size = 9, color = "black"))
+    barchart <- barchart + scale_fill_manual(values = c("NULL" = "#7294D4", "OVERT" = "#C6CDF7")) + scale_color_manual(values = c("DOC" = "black", "LIT" = "white")) + theme(axis.text.x = element_text(size = 10, color = "black"), axis.text.y=element_text(color="black"))
     #regular ^^^
   }
 
@@ -128,7 +128,7 @@ pp4 <- pronoun_plot(mydata, country="Panamá", type="supp", panelID="d")
 pp5 <- pronoun_plot(mydata, country="Spain", type="supp", panelID="e")
 
 # combined plot
-combined_plot <- grid.arrange(pp2, pp3, pp4, pp5, nrow=2, ncol=2)
+combined_plot <- grid.arrange(pp2, pp3, pp4, pp5, nrow=2, ncol=2, widths=c(0.85, 1.0))
 combined_plot <- grid.arrange(pp1, combined_plot, nrow=2, ncol=1, heights=c(1.1,2))
 
 # save to external file
