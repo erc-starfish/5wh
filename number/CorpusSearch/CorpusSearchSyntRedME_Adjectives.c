@@ -6,7 +6,7 @@ ignore_nodes: CODE|'|"|,|E_S|/|RMV*
 
 coding_query:
 
-//  position of the strong adjective in nominative NPs with a plural noun. Prenominal contexts with no determiner, and posnominal adjectives in general
+//  position of the strong adjective in NPs with a plural noun. Prenominal contexts with no determiner, and posnominal adjectives in general
 1: {
 
   multiple:(NP* iDoms [1]ADJP|ADJ)

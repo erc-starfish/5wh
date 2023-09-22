@@ -6,7 +6,7 @@ ignore_nodes: CODE|'|"|,|E_S|/|RMV*
 
 coding_query:
 
-//  finds NPs with a definite article and N in the plural
+//  finds NPs with a plural noun and a quantifier:
 1: {
 
   quant: (NP* iDoms Q*|Q)
@@ -15,7 +15,7 @@ coding_query:
   z: ELSE
 
 }
-// agreement between determiner and noun
+// agreement between quantifier and noun: this layer has to be manually corrected but provides a first approximation
 
 2: {
   agreement: (NP* iDoms Q*) AND (Q* iDoms +alle|ale|alla|alle|Alle|$alle|ALLE|alre|ealla|ealle|Ealle|ane|anie|anye|ba|bo+t=e=|bo+te|Bo+te|bothe|eche|eueriche|fewe|fiewe|feawe|veawe|ueawe|halfe|halle|ilke|lute|manie|Manie|manye|Manye|MANYE|menye|monie|Monie|monye|Monye|mani+ge|Mani+ge|meche|moche|muche|myche|micele|michele|muchele|nane|Nane|none|oghte|some|somme|Somme|sume|Sume|summe|Summe|ulche|yche)
@@ -114,6 +114,8 @@ coding_query:
     Northern: (CMROLLEP-M24*|CMROLLTR-M24*|CMBENRUL-M3*|CMEDTHOR-M34*|CMGAYTRY-M34*|CMTHORN-MX4* inID)
     z: ELSE
 }
+
+// number of syllables: first approximation. Needs to be manually corrected.
 
 6: {
   monosyllabic: (NP* iDoms Q*) AND (Q* iDoms ulche|yche|som|Som|ssum|sum|$Sum|Sum|zome|Zome|some|somme|Somme|sume|Sume|summe|Summe|summes|nane|oghte|Nane|nanes|none|nan|non|noon|meche|moche|muche|myche|lit|lut|lute|ilke|halfe|half|halle|few|fewe|fiewe|feawe|veawe|ueawe|eche|ech|ei|both|ba|bo+t=e=|bo+te|Bo+te|bothe|al|Al|all|All|eall|+alces|+alle|ale|alla|alle|Alle|$alle|ALLE|alles|alre|ealla|ealle|Ealle|ealles)

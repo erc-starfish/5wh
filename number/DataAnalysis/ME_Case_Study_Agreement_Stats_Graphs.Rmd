@@ -47,6 +47,7 @@ library(maps, warn.conflicts = FALSE)
 library(viridisLite, warn.conflicts = FALSE)
 library(viridis, warn.conflicts = FALSE)       # colors of the map
 library(DHARMa, warn.conflicts = FALSE)       # for residuals
+library(colorspace)
 
 ```
 
@@ -57,7 +58,8 @@ Then, we import the annotated data, and prepare it for visualization (e.g. elimi
 
 
 # Importing the data:
-data_agreementadj <- read.delim("C:/Users/raque/OneDrive/Documents/PhD/Data_analysis_verbal_morphology/strong-adj-intersective5b.cod.ooo", header=F, sep=":")
+
+data_agreementadj <- read.delim("C:/Users/raque/OneDrive/Documents/2023PHD/PhD2/Papers/Philological_society_STARFISH/Repository_CaseStudy_SyntagmaticRedundancyME/Data/SyntRedME_Adjectives.cod.ooo.ooo", header=F, sep=":") #This path has to be changed 
 
 # Naming the columns:
 colnames(data_agreementadj) <- c("position", 
@@ -88,7 +90,7 @@ ex.dataadj <- subset(data_agreementadj,
 ## QUANTIFIERS DATA:
 
 # Importing the data:
-data_agreementquant <- read.delim("C:/Users/raque/OneDrive/Documents/PhD/Data_analysis_verbal_morphology/quantifier-pl.cod.ooo", header=F, sep=":")
+data_agreementquant <- read.delim("C:/Users/raque/OneDrive/Documents/2023PHD/PhD2/Papers/Philological_society_STARFISH/Repository_CaseStudy_SyntagmaticRedundancyME/Data/SyntRedME_Quantifiers.cod.ooo.ooo", header=F, sep=":")
 
 # Naming the columns:
 colnames(data_agreementquant) <- c("quant",
@@ -321,10 +323,11 @@ mapengland2<- ggplot() +
              alpha=I(.7), 
              size=3.5, 
              position=position_jitter(h=0.10, w=0.10)) +  
-  scale_color_viridis(option="turbo", limits=c(-1,1)) +
+    scale_color_continuous_sequential(palette = "GnBu",limits=c(-1,1) ) +
   theme(legend.position = c(0.87, 0.75))
 
 mapengland2
+
 ```
 
 ## Barplots
@@ -433,7 +436,7 @@ ex.fittotal <- lm(diff~Dialect, data=total)
 summary(ex.fittotal)
 
 #using South as the reference level:
-total$Dialect <- relevel(factor(total$Dialect), ref = 2)
+total$Dialect <- relevel(factor(total$Dialect), ref = 3)
 ex.fittotal <- lm(diff~Dialect, data=total)
 summary(ex.fittotal)
 
