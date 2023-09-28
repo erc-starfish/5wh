@@ -1,59 +1,3 @@
----
-title: "Case study: null subjects"
-author: "Gemma Hunter McCarley"
-date: "September 2023"
-output:
-  html_document:
-    toc: true
-    toc_float: false
-    number_sections: true
-    theme: cosmo
-  pdf_document:
-    toc: true
-    number_sections: true
-classoption: landscape
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, fig.align="center", warning=FALSE, message=FALSE, tidy=TRUE, tidy.opts=list(width.cutoff=80))
-```
-```{css, echo=FALSE}
-h1,h4 {
-text-align: center;
-}
-p {
-text-align: justify; 
-}
-```
-# Introduction
-
-The null subjects case study analyzed data from the (not yet published) CorDELES corpus. Samples pulled from the texts listed in "CorDELES Texts & Sources" were transcribed, parsed by the Stanford Parser (https://nlp.stanford.edu/software/spanish-faq.html), annotated by hand in xml, and then exported to csv. The datasets used in this study consist of the following columns:  
-  
-- cordeles_2023.csv (each pronoun is a data point)   
-    - **docID**: the unique ID for each document made up of country + century + title, e.g. *dr16ent* = Dominican Republic, 16th century, *Entrémes*.  
-    - **sentenceID**: the sentence number automated by the Stanford Parser.  
-    - **sub_dep**: a marker for subjecthood, all are **nsubj** (a remnant of the universal dependencies used by the parser).  
-    - **subid**: the token ID of the subject.  
-    - **sub_word**: the lexical subject. In the case of multiple token subjects, a single token within the noun phrase was taken to represent the subject as a whole.  
-    - **sub_POS**: the part-of-speech of the subject. In this dataset, **sub_POS** can either be **NULL** or **OVERT**.  
-    - **Title**: full (or shortened, in the case of very long titles) text title.  
-    - **Region**: broader geographical grouping than country consisting of three levels (**Caribbean**, **South America**, **Peninsular (Spain)**).  
-    - **Country**: the country the text is from. For the most part this is also the country the author is from or was predominantly raised in; however, the earliest texts in the 16th century are naturally Spain-born authors who settled for a significant period in the specified country.  
-    - **Century**: the century the text was written in.  
-    - **Year**: the year the text was written in. Some texts only had a range for year, in which case the average was taken.  
-    - **Macro_Region**: the broadest geographical grouping consisting of two levels (**Spain** or **Non-Spain**).  
-    - **ORSCORE**: the degree of orality calculated for each text.  
-    - **Genre**: the initial binary genre split between literary (**LIT**) and non-literary (**DOC**) texts, plus a tag for supplemental texts (**SUPP**).  
-- orality.csv (each text is a data point)  
-    - **docID**, **ORSCORE**, and **Country** are the same as above.  
-    - **OVERT_RATE**: the proportion of overt subject pronouns per text.  
-    - **orality**: a categorical ranking of **ORSCOREs** split into **LOW** (0.00-0.25), **MID** (0.26-0.50), **HIGH** (0.51-0.75), and **HUGE** (1.00+). There isn't a tag for **ORSCOREs** between 0.76 and 1.00 as no text falls in that range.  
-
-The code in the following sections was run using R version 4.3.0. 
-
-# Load dependencies and data
-
-```{r}
 library(tidyverse)
 library(lme4)
 library(DHARMa)
@@ -66,41 +10,33 @@ orality <- read.csv('orality.csv', header = TRUE, encoding = "UTF-8")
 
 #get rid of duplicate data (translation of another text)
 orality <- subset(orality, docID != "CPMTpoSP") 
-```
 
-
-# Plots and models
-
-## Orality plot and regression
-
-```{r}
+#ORALITY ####
 #plot
 orality$Country <- ifelse(orality$country == "DR", "Dominican Republic", orality$country)
 orality$Country <- factor(orality$Country)
 orality_plot_regression <- ggplot(data = orality, aes(x = ORSCORE, y = OVERT_RATE)) + 
+  #ylim(0, .3) +
+  #xlim(0, 2.5) +
   geom_smooth(method = "lm", se = FALSE, color = "black") +
   labs(x="ORSCORE", y="Proportion of overt pronouns") + 
-	geom_point(size=3.0, aes(pch = Country, color = Country)) + 
-	theme_minimal() + scale_color_npg()
+  geom_point(size=3.0, aes(pch = Country, color = Country)) + 
+  #ggtitle(paste0("Orality")) + 
+  theme_minimal() + scale_color_npg()
 
 # save to external file
-ggsave("Figure2.pdf", plot=orality_plot_regression, height=4, width=6)
+ggsave("orality.pdf", plot=orality_plot_regression, height=4, width=6)
 
 
 #model
 xmdl <- lm(OVERT_RATE ~ ORSCORE, data = orality)
 summary(xmdl)
-```
 
-## Pronoun proportions plot
-
-```{r}
-#Pronoun Plots####
-
+#PRONOUN PLOTS ####
 pronoun_plot <- function(mydata, country, panelID, type="regular") {
   #make country specific (country, re-leveling, and year labels):
   data <- filter(mydata, Country == country)
-
+  
   if (country == "Colombia") {
     data$docID <- factor(data$docID,levels = c("co16oyc", "co16evii", "co17vdm", "co17gnrg", "co18gsfb", "co18ppym", "co19ihdc", "CPMTpr", "CPMTpoOG", "CPMTpoSP", "CPMTpl", "co19syl"))
     docs <- c("1563\nOYC", "1589\nEVII", "1614\nVDM", "1674\nGNRG", "1787\nGSFB", "1792\nPPYM", "1844\nIHDC", "1877\nPR", "1877\nPOog", "1877\nPOsp", "1880\nPL", "1882\nSYL")
@@ -117,7 +53,7 @@ pronoun_plot <- function(mydata, country, panelID, type="regular") {
     data$docID <- factor(data$docID,levels = c("sp16can", "sp16lah", "sp17dq", "sp17acra", "sp18arjd", "sp18eau", "sp19qdev", "sp19cpc"))
     docs <- c("1525\nCAN", "1551\nLAH", "1605\nDQ", "1664\nACRA", "1756\nARJD", "1786\nEAU", "1836\nQDEV", "1885\nCPC")
   }
-
+  
   #plot (repeat for each country)
   barchart <- data %>% 
     ggplot(aes(x = docID, fill = sub_POS)) +
@@ -127,9 +63,9 @@ pronoun_plot <- function(mydata, country, panelID, type="regular") {
     xlab("Document ID") +
     guides(fill=guide_legend(title="Pronoun"), color=guide_legend(override.aes=list(fill=NA), title="Genre")) +
     theme_minimal() + theme(panel.grid.major=element_blank(), panel.grid.minor=element_blank())
-
+  
   barchart <- barchart + ggtitle(paste0("(", panelID, ") ", country, " (n = ", nrow(data), ")"))
-
+  
   if (type == "supp") {
     #barchart <- barchart + scale_fill_manual(values = c("NULL" = "#7294D4", "OVERT" = "#C6CDF7")) + scale_color_manual(values = c("DOC" = "black", "LIT" = "white", "SUPP" = "gold")) + theme(axis.text.x = element_text(size = 9, color = "black"))
     barchart <- barchart + scale_fill_manual(values = c("OVERT" = "#3d62a6", "NULL" = "#dfe2f7")) + scale_color_manual(values = c("DOC" = "black", "LIT" = "black", "SUPP" = "black")) + theme(axis.text.x = element_text(size = 10, color = "black"), axis.text.y=element_text(color="black"))
@@ -138,7 +74,7 @@ pronoun_plot <- function(mydata, country, panelID, type="regular") {
     barchart <- barchart + scale_fill_manual(values = c("NULL" = "#7294D4", "OVERT" = "#C6CDF7")) + scale_color_manual(values = c("DOC" = "black", "LIT" = "white")) + theme(axis.text.x = element_text(size = 10, color = "black"), axis.text.y=element_text(color="black"))
     #regular ^^^
   }
-
+  
   barchart
 }
 
@@ -156,13 +92,9 @@ combined_plot <- grid.arrange(pp2, pp3, pp4, pp5, nrow=2, ncol=2, widths=c(0.85,
 combined_plot <- grid.arrange(pp1, combined_plot, nrow=2, ncol=1, heights=c(1.1,2))
 
 # save to external file
-ggsave("Figure3.pdf", plot=combined_plot, height=10, width=9)
-```
+ggsave("pronoun-combined.pdf", plot=combined_plot, height=10, width=9)
 
-## Main model
-
-```{r}
-#Main Model####
+#MAIN MODEL####
 #Get data ready
 binary_null <- within(mydata, Country <- relevel(factor(Country), ref = "Spain")) #make Spain the reference level for Country
 binary_null <- within(binary_null, Macro_Region <- relevel(factor(Macro_Region), ref = "Spain")) #make Spain the reference level for Macro_Region
@@ -177,13 +109,8 @@ binary_null <- subset(binary_null, binary_null$docID != "CPMTpoSP") #get rid of 
 binary_null_mdl_int <- glmer(factor(sub_POS) ~ scale(Year) * scale(ORSCORE) + Macro_Region + (1|docID), 
                              data = binary_null, 
                              family = 'binomial')
-```
 
-
-# Tests
-
-```{r}
-#tests
+#TESTS####
 summary(binary_null_mdl_int)
 drop1(binary_null_mdl_int, test = "Chisq")
 Anova(binary_null_mdl_int, type = "III")
@@ -192,4 +119,3 @@ AIC(binary_null_mdl_int)
 #checking residuals
 res_orality <- simulateResiduals(xmdl, plot = T)
 res <- simulateResiduals(binary_null_mdl_int, plot = T)
-```
