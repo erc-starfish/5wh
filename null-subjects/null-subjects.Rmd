@@ -11,6 +11,9 @@ output:
   pdf_document:
     toc: true
     number_sections: true
+    latex_engine: xelatex
+    includes:
+      in_header: ../common/preamble.tex
 classoption: landscape
 ---
 
