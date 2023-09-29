@@ -32,15 +32,14 @@ text-align: justify;
 
 # Intro
 
-The repository for the third case study of the paper, case, contains 6
-files: the two plots included in the paper, the two corresponding
-dataframes (adpo_props_facet.csv and adpo_props.csv), the corresponding
-R ggplot code file (adpositional_realization_proportion_graph_code.R)
-and all the annotated texts (annotated_texts.csv).
+The repository for the third case study of the paper, case, contains
+(i) the two plots included in the paper, (ii) the two corresponding
+dataframes (adpo_props_facet.csv and adpo_props.csv), (iii)
+all the annotated texts (annotated_texts.csv), as well as data analysis
+and plotting code (this file).
 
-This readme details the corpus data used and how it has been manipulated
-by the authors. The code file further contains comments clarifying how
-ggplot was used to create the two plots.
+The current file also details the corpus data used and how it has been manipulated
+by the authors.
 
 
 # Corpus data
@@ -108,7 +107,7 @@ as follows. Most importantly for the paper, each adpositional and
 nominal phrase was tagged with one of a number of function tags
 reflecting their grammatical role in the bigger phrase/clause (as
 opposed to morphological case marking). These are found in the func
-column of the annotated_texts file. Each function tag is briefly
+column of the annotated_texts.csv file. Each function tag is briefly
 described below:
 
 Subj- subject.
@@ -166,9 +165,8 @@ ass tag.
 
 In addition to the function tags, each nominal phrase was tagged with
 respect to whether it is marked with an adposition or not (y or n) in
-the nominal_phrase_adpo_marked column. Further annotation additions made
-by the authors are the func_detail, further_func, case_of_nom,
-further_case and prep_marked columns, none of which are used in the
+the `nominal_phrase_adpo_marked` column. Further annotation additions made
+by the authors are the `func_detail`, `further_func`, `case_of_nom`, further_case` and `prep_marked` columns, none of which are used in the
 plots of this paper. Finally, the text names were added according to the
 authors' numbering and the text date (given in the corpus metadata). The
 annotated_texts file therefore includes all the changes made to the
@@ -176,18 +174,18 @@ corpus by the authors. Several columns from the original corpus texts
 are not included in this file as they are not used by the authors.
 
 The proportion of adpositional realization of each function listed above
-was then calculated using the nominal_phrase_adpo_marked and func
-columns to give the proportion (prop) in the adpo_prop and
-adpo_prop_facet dataframes. A number of other functions are not included
+was then calculated using the `nominal_phrase_adpo_marked` and `func`
+columns to give the proportion (`prop`) in the `adpo_prop` and
+`adpo_prop_facet` dataframes. A number of other functions are not included
 in these dataframes for reasons of data size. The agentive tag mentioned
 above is not often used, for instance. Instances where the function is
-unclear (unk) are also disregarded. The dates of the texts in these two
+unclear (`unk`) are also disregarded. The dates of the texts in these two
 dataframes are given as single years; in the case of time periods, a
 midpoint is used.
 
-The adpo_props_facet file and corresponding plot includes the
-proportions for all the functions listed above whilst the adpo_props and
-corresponding plot includes only com, ins, goal, recip and poss.
+The adpo_props_facet.csv file and corresponding plot includes the
+proportions for all the functions listed above whilst the adpo_props.csv and
+corresponding plot includes only `com`, `ins`, `goal`, `recip` and `poss`.
 
 
 # Data analysis and plots
@@ -198,10 +196,51 @@ library(tidyverse)
 library(dplyr)
 library(ggsci)
 
+# read data
+annotated_texts <- read.csv("annotated_texts.csv")
 
-# read in data
-adpo_props <- read.csv("adpo_props.csv")
-adpo_props_facet <- read.csv("adpo_props_facet.csv")
+#grouping funcs from the annotated_texts file
+annotated_texts$func[annotated_texts$func == 'path'] <- 'loc'
+annotated_texts$func[annotated_texts$func == 'pathplace'] <- 'loc'
+annotated_texts$func[annotated_texts$func == 'temp'] <- 'loc'
+annotated_texts$func[annotated_texts$func == 'path:goal'] <- 'loc'
+annotated_texts$func[annotated_texts$func == 'path:source'] <- 'loc'
+annotated_texts$func[annotated_texts$func == 'caus'] <- 'abl'
+
+#deleting funcs from the annotated_texts file
+annotated_texts <- annotated_texts[!(annotated_texts$func=="about"),]
+annotated_texts <- annotated_texts[!(annotated_texts$func=="accord"),]
+annotated_texts <- annotated_texts[!(annotated_texts$func=="agent"),]
+annotated_texts <- annotated_texts[!(annotated_texts$func=="ben"),]
+annotated_texts <- annotated_texts[!(annotated_texts$func=="comp"),]
+annotated_texts <- annotated_texts[!(annotated_texts$func=="instead"),]
+annotated_texts <- annotated_texts[!(annotated_texts$func=="purp"),]
+annotated_texts <- annotated_texts[!(annotated_texts$func=="simul"),]
+annotated_texts <- annotated_texts[!(annotated_texts$func=="unk"),]
+annotated_texts <- annotated_texts[!(annotated_texts$func=="unm"),]
+annotated_texts <- annotated_texts[!(annotated_texts$func=="until"),]
+annotated_texts <- annotated_texts[!(annotated_texts$func=="voc"),]
+annotated_texts <- annotated_texts[!(annotated_texts$func=="without"),]
+annotated_texts <- annotated_texts[!(annotated_texts$func=="voc"),]
+
+
+#calculate proportion of adpositional realizatin for each remaining function
+adpo_props_facet <- annotated_texts %>% group_by(textname, date, func) %>% summarise(prop = mean(nominal_phrase_adpo_marked == "y", na.rm=TRUE))
+#delete NA row
+adpo_props_facet <- na.omit(adpo_props_facet)
+
+#delete further functions for second plot
+adpo_props <- adpo_props_facet[!(adpo_props_facet$func=="subj" ),]
+adpo_props <- adpo_props[!(adpo_props$func=="dobj" ),]
+adpo_props <- adpo_props[!(adpo_props$func=="abl" ),]
+adpo_props <- adpo_props[!(adpo_props$func=="ass" ),]
+adpo_props <- adpo_props[!(adpo_props$func=="loc" ),]
+
+
+# write data
+write.csv(adpo_props, "adpo_props.csv", row.names=FALSE)
+write.csv(adpo_props_facet, "adpo_props_facet.csv", row.names=FALSE)
+
 
 # factorize functions
 adpo_props$func <- factor(adpo_props$func)
@@ -212,12 +251,11 @@ levels(adpo_props$func) <- c("comitative", "goal", "instrumental", "possessive",
 levels(adpo_props_facet$func) <- c("ablative", "associative", "comitative", "direct object", "goal", "instrumental", "locative", "possessive", "recipient", "subject")
 
 # change order of funcs
-adpo_props$func <- factor(adpo_props$func, levels = c("comitative", "associative", "instrumental", "ablative", "locative", "goal", "recipient", "possessive", "direct object", "subject")) 
+adpo_props$func <- factor(adpo_props$func, levels = c("comitative", "instrumental", "goal", "recipient", "possessive")) 
 adpo_props_facet$func <- factor(adpo_props_facet$func, levels = c("comitative", "associative", "instrumental", "ablative", "locative", "goal", "recipient", "possessive", "direct object", "subject")) 
 
 # adpositional proportions facet plot (all functions)
-df <- adpo_props_facet
-d <- ggplot(df, aes(x=date, y=prop)) + geom_point(color="#3d62a6", size=1.0) + geom_smooth(fullrange=FALSE, se=TRUE, span=1.5, color="black", size=0.8) + facet_wrap(.~func, nrow=2) + theme_bw() + theme(axis.text=element_text(color="black")) + ylim(0,1) + 
+d <- ggplot(adpo_props_facet, aes(x=date, y=prop)) + geom_point(color="#3d62a6", size=1.0) + geom_smooth(fullrange=FALSE, se=TRUE, span=1.5, color="black", size=0.8) + facet_wrap(.~func, nrow=2) + theme_bw() + theme(axis.text=element_text(color="black")) + ylim(0,1) + 
 	scale_y_continuous(expand=c(0,0), limits=c(-1,2)) +
   coord_cartesian(ylim=c(-0.03,1.03)) + 
  ylab("Proportion of adpositional realization") + xlab("Time") +
