@@ -1,5 +1,7 @@
 # 5wh
 
+[![DOI](https://zenodo.org/badge/691192265.svg)](https://zenodo.org/badge/latestdoi/691192265)
+
 Data and code for the following paper:
 
 > George Walkden, Gemma Hunter McCarley, Raquel Montero, Molly Rolf, Sarah Einhaus & Henri Kauhanen. Sociolinguistic typology meets historical corpus linguistics.
