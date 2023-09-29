@@ -6,9 +6,9 @@ Data and code for the following paper:
 
 This paper contains three case studies. Each case study has its own supplementary information document:
 
-- Case study 1 (number): <number/number.pdf>
-- Case study 2 (null subjects): <null-subjects/null-subjects.pdf>
-- Case study 3 (case): <case/case.pdf>
+- Case study 1 (number): [number/number.pdf](number/number.pdf)
+- Case study 2 (null subjects): [null-subjects/null-subjects.pdf](null-subjects/null-subjects.pdf)
+- Case study 3 (case): [case/case.pdf](case/case.pdf)
 
 See the `.Rmd` file in the corresponding directory for the source code.
 
