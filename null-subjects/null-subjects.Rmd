@@ -135,8 +135,7 @@ pronoun_plot <- function(mydata, country, panelID, type="regular") {
 
   if (type == "supp") {
     #barchart <- barchart + scale_fill_manual(values = c("NULL" = "#7294D4", "OVERT" = "#C6CDF7")) + scale_color_manual(values = c("DOC" = "black", "LIT" = "white", "SUPP" = "gold")) + theme(axis.text.x = element_text(size = 9, color = "black"))
-    #barchart <- barchart + scale_fill_manual(values = c("OVERT" = "#3d62a6", "NULL" = "#dfe2f7")) + scale_color_manual(values = c("DOC" = "black", "LIT" = "black", "SUPP" = "black")) + theme(axis.text.x = element_text(size = 10, color = "black"), axis.text.y=element_text(color="black"))
-    barchart <- barchart + scale_fill_manual(values = c("OVERT" = "#3d62a6", "NULL" = "#e6e7f0")) + scale_color_manual(values = c("DOC" = "black", "LIT" = "black", "SUPP" = "black")) + theme(axis.text.x = element_text(size = 10, color = "black"), axis.text.y=element_text(color="black"))
+    barchart <- barchart + scale_fill_manual(values = c("OVERT" = "#3d62a6", "NULL" = "#dfe2f7")) + scale_color_manual(values = c("DOC" = "black", "LIT" = "black", "SUPP" = "black")) + theme(axis.text.x = element_text(size = 10, color = "black"), axis.text.y=element_text(color="black"))
     #supp genre ^^^
   } else if (type == "regular") {
     barchart <- barchart + scale_fill_manual(values = c("NULL" = "#7294D4", "OVERT" = "#C6CDF7")) + scale_color_manual(values = c("DOC" = "black", "LIT" = "white")) + theme(axis.text.x = element_text(size = 10, color = "black"), axis.text.y=element_text(color="black"))
