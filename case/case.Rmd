@@ -271,9 +271,11 @@ ggsave("Figure4.pdf", d, height=4, width=6.5)
 p <- ggplot(adpo_props, aes(x=date, y=prop, color=func, linetype=func, group=func)) + geom_smooth(se=FALSE, span=1.5) +
    labs(y= "Proportion of adpositional realization", x = "Time") + theme_bw() + theme(axis.text=element_text(color="black"))  +ylim(0,1) +
  scale_color_npg() + 
- labs(linetype= 'Function', color='Function') 
+ labs(linetype= 'Function', color='Function') +
+ scale_linetype_manual(values=c(1,2,3,4,6)) +
+ theme(legend.key.width=unit(1.2, "cm"))
 
 print(p)  
 
-ggsave("Figure5.pdf", p, height=3.5, width=5.0)
+ggsave("Figure5.pdf", p, height=3.3, width=5.0)
 ```
